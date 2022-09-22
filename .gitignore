@@ -1,0 +1,6 @@
+experiments
+scripts/test_results
+scripts/conquer_results
+data/*/
+data/labels_dict.json
+__pycache__
