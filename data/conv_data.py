@@ -60,7 +60,7 @@ class ConvDataset(Dataset):
         self.tokenized = {}
 
         unique_conv = []
-        self.expended_data = []
+        self.expanded_data = []
         for conv in self.conversations:
             id = conv[ID]
             conv_data = conv[ALL_CONV].replace(START_TOKEN, '').replace(CTX_TOKEN, '').replace(SEP_TOKEN, '<sep>').strip()
@@ -83,7 +83,7 @@ class ConvDataset(Dataset):
                                         max_length=args.answer_max_length,
                                         return_tensors=PT)[INPUT_IDS].squeeze()
             if conv_data.replace(' ', '').lower() not in unique_conv:
-                self.expended_data.append({
+                self.expanded_data.append({
                     ID: id,
                     DOMAIN_IDS: domain_idx,
                     DOMAIN_EMB: domain_emb,
@@ -111,7 +111,7 @@ class ConvDataset(Dataset):
                                                 max_length=args.answer_max_length,
                                                 return_tensors=PT)[INPUT_IDS].squeeze()
                     if conv_data.replace(' ', '').lower() not in unique_conv:
-                        self.expended_data.append({
+                        self.expanded_data.append({
                             ID: id,
                             DOMAIN_IDS: domain_idx,
                             DOMAIN_EMB: domain_emb,
@@ -122,7 +122,7 @@ class ConvDataset(Dataset):
                         unique_conv.append(conv_data.replace(' ', '').lower())
 
     def __getitem__(self, index):
-        conversation_data = self.expended_data[index]
+        conversation_data = self.expanded_data[index]
 
         # select random startpoint
         startpoint, gold_path_idx = random.choice(list(conversation_data[GOLD_PATHS_IDX].items()))
@@ -157,4 +157,4 @@ class ConvDataset(Dataset):
         }
 
     def __len__(self):
-        return len(self.expended_data)
+        return len(self.expanded_data)
